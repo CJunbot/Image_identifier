@@ -18,15 +18,20 @@ def predict(network, x):
     return y
 
 
+
+batch_size = 100
+accuracy = 0
+
 (x_train, y_train), (x_test, y_test) = load_mnist(flatten=True, normalize=False)
 
 with open("./dataset/sample_weight.pkl", 'rb') as f:
     network = pickle.load(f)
 
-accuracy = 0
-for i in range(len(x_train)):
-    y = predict(network, x_train[i])
-    p = np.argmax(y)
-    if p == y_train[i]:
-        accuracy += 1
+for i in range(0, len(x_train), batch_size):
+    x_batch = x_train[i:i+batch_size]
+    y_batch = predict(network, x_batch)
+    p = np.argmax(y_batch, axis=1)  # 각 행에서 최댓값(100,10)이니 100행에서 각각 하나씩 -> (100,1)
+    accuracy += np.sum(p == y_train[i:i+batch_size])
+
+
 print("accuracy: ", accuracy/len(x_train))
