@@ -5,19 +5,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 from dataset.mnist import load_mnist
 from Two_layer import TwoLayerNet
-from Optimizer import Adam
+from Optimizer import Adam, SGD
+from function import *
 
-
-optimize = Adam
+optimize = Adam()
+optimize2 = SGD()
 (x_train, y_train), (x_test, y_test) = load_mnist(one_hot_label=True, normalize=True)
 
 repeat_number = 10000
 batch_size = 100
 learning_rate = 0.1
 network = TwoLayerNet(784, 100, 10)
+network2= TwoLayerNet(784, 100, 10)
 train_acc_list = []
 test_acc_list = []
-loss_list = []
+adam_loss_list = []
+sgd_loss_list = []
 train_size = x_train.shape[0]
 
 iter_per_epoch = max(train_size / batch_size, 1)
@@ -29,13 +32,14 @@ for i in range(repeat_number):
     y_batch = y_train[batch_index]
 
     grad = network.gradient(x_batch, y_batch)
-    optimize.update(network.params, grad)
-    for key in ('W1', 'b1', 'W2', 'b2'):
-        network.params[key] -= learning_rate * grad[key]  #SGD
-
-
+    optimize.update(params=network.params, grads=grad)  # 차이가 엄청 크다
     loss = network.loss(x_batch, y_batch)
-    loss_list.append(loss)
+    adam_loss_list.append(loss)
+
+    grad = network2.gradient(x_batch, y_batch)
+    optimize2.update(params=network2.params, grads=grad)
+    loss2 = network2.loss(x_batch, y_batch)
+    sgd_loss_list.append(loss2)
 
     if i % iter_per_epoch == 0:
         train_acc = network.accuracy(x_train, y_train)
@@ -44,3 +48,11 @@ for i in range(repeat_number):
         test_acc_list.append(test_acc)
         print("train acc:" + str(train_acc) + "| test acc:" + str(test_acc))
 
+x = np.arange(repeat_number)
+plt.plot(x, smooth_curve(adam_loss_list), marker='o', markevery=100, label='adam')
+plt.plot(x, smooth_curve(sgd_loss_list), marker='x', markevery=100, label='sgd')
+plt.xlabel("iterations")
+plt.ylabel("loss")
+plt.ylim(-0.2, 1)
+plt.legend()
+plt.show()
