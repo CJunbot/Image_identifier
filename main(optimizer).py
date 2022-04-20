@@ -4,19 +4,18 @@ sys.path.append(os.pardir)  # 부모 디렉터리의 파일을 가져올 수 있
 import numpy as np
 import matplotlib.pyplot as plt
 from dataset.mnist import load_mnist
-from Two_layer import TwoLayerNet
+from Two_layer import TwoLayerNet, TwoLayerNet2
 from Optimizer import Adam, SGD
 from function import *
 
-optimize = Adam()
-optimize2 = SGD()
+optimize = SGD()
 (x_train, y_train), (x_test, y_test) = load_mnist(one_hot_label=True, normalize=True)
 
 repeat_number = 10000
 batch_size = 100
 learning_rate = 0.1
 network = TwoLayerNet(784, 100, 10)
-network2= TwoLayerNet(784, 100, 10)
+network2 = TwoLayerNet2(784, 100, 10)
 train_acc_list = []
 test_acc_list = []
 adam_loss_list = []
@@ -32,12 +31,12 @@ for i in range(repeat_number):
     y_batch = y_train[batch_index]
 
     grad = network.gradient(x_batch, y_batch)
-    optimize.update(params=network.params, grads=grad)  # 차이가 엄청 크다
+    optimize.update(params=network.params, grads=grad)  # sgd와 adam 차이가 엄청 크다
     loss = network.loss(x_batch, y_batch)
     adam_loss_list.append(loss)
 
     grad = network2.gradient(x_batch, y_batch)
-    optimize2.update(params=network2.params, grads=grad)
+    optimize.update(params=network2.params, grads=grad)
     loss2 = network2.loss(x_batch, y_batch)
     sgd_loss_list.append(loss2)
 
