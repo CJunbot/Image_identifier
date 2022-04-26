@@ -1,9 +1,7 @@
 import pickle
-from function import sigmoid, relu, softmax
-import matplotlib.pyplot as plt
+from utils.function import sigmoid, softmax
 import numpy as np
 from dataset.mnist import load_mnist
-from PIL import Image
 
 
 def predict(network, x):

@@ -1,12 +1,11 @@
 # coding: utf-8
 import sys, os
 sys.path.append(os.pardir)  # 부모 디렉터리의 파일을 가져올 수 있도록 설정
-import numpy as np
 import matplotlib.pyplot as plt
 from dataset.mnist import load_mnist
-from Two_layer import TwoLayerNet, TwoLayerNet2
-from Optimizer import Adam, SGD
-from function import *
+from utils.Two_layer import TwoLayerNet, TwoLayerNet2
+from utils.Optimizer import SGD
+from utils.function import *
 
 optimize = SGD()
 (x_train, y_train), (x_test, y_test) = load_mnist(one_hot_label=True, normalize=True)

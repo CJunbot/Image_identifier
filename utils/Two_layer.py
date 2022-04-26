@@ -2,10 +2,8 @@
 import sys, os
 import math
 sys.path.append(os.pardir)  # 부모 디렉터리의 파일을 가져올 수 있도록 설정
-import numpy as np
-from function import *
 from collections import OrderedDict
-from layer import *
+from utils.layer import *
 
 class TwoLayerNet:
 
